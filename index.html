@@ -204,7 +204,7 @@
     transition:all .3s ease;
   }
   .nav-cta:hover{background:var(--gold); color:var(--bg); border-color:var(--gold);}
-  .menu-toggle{display:none; flex-direction:column; gap:5px; cursor:pointer; z-index:102; touch-action:manipulation; -webkit-tap-highlight-color:transparent; padding:10px; margin:-10px;}
+  .menu-toggle{display:none; flex-direction:column; gap:5px; cursor:pointer; position:relative; z-index:130; touch-action:manipulation; -webkit-tap-highlight-color:transparent; padding:10px; margin:-10px;}
   .menu-toggle span{width:22px; height:1px; background:var(--cream);}
 
   section{position:relative; z-index:1; padding:150px 8%;}
@@ -257,6 +257,7 @@
     opacity:0; pointer-events:none;
   }
   .wa-float.is-visible{ opacity:1; pointer-events:auto; }
+  body.menu-open .wa-float{ opacity:0; pointer-events:none; transform:scale(0.8); }
   .wa-float:hover{transform:scale(1.08); box-shadow:0 10px 30px rgba(0,0,0,0.45);}
   .wa-float svg{width:30px; height:30px;}
   @keyframes waPulse{
@@ -531,7 +532,7 @@
     .hero-strip-card{width:190px;}
   }
 
-  PLACEHOLDER (for real photos to come) ===== */
+  /* ===== PLACEHOLDER (for real photos to come) ===== */
   .placeholder{
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     width:100%; height:100%; gap:10px; color:var(--muted);
@@ -791,7 +792,8 @@
 
   /* mobil dropdown menü */
   .mobile-menu{
-    position:fixed; top:0; right:-100%; width:78%; max-width:320px; height:100vh;
+    position:fixed; top:0; right:-100%; width:78%; max-width:320px; height:100dvh;
+    overflow-y:auto;
     background:rgba(11,10,9,0.98); backdrop-filter:blur(14px);
     z-index:120; padding:100px 32px 40px;
     transition:right .4s ease;
@@ -903,14 +905,14 @@
     <!-- VIDEO ALANI - Instagram reels buraya entegre edilecek -->
     <div class="hero-videos">
       <div class="hero-video-card" role="button" tabindex="0" aria-label="Showroom tanıtım videosu" data-video="assets/hakanyapi-showroom.mp4" data-title="Showroom Turu" data-subtitle="Mağazamızdan">
-        <video src="" muted loop playsinline style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></video>
+        <video poster="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27360%27%20height%3D%27640%27%3E%20%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%270%27%20y2%3D%271%27%3E%20%3Cstop%20offset%3D%270%27%20stop-color%3D%27%231a1715%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%230d0c0b%27%2F%3E%20%3C%2FlinearGradient%3E%3C%2Fdefs%3E%20%3Crect%20width%3D%27360%27%20height%3D%27640%27%20fill%3D%27url%28%23g%29%27%2F%3E%20%3Cg%20fill%3D%27none%27%20stroke%3D%27%23C9A668%27%20stroke-width%3D%273%27%20opacity%3D%270.30%27%3E%20%3Crect%20x%3D%27128%27%20y%3D%27244%27%20width%3D%27104%27%20height%3D%2784%27%20rx%3D%2712%27%2F%3E%20%3Ccircle%20cx%3D%27154%27%20cy%3D%27274%27%20r%3D%2711%27%2F%3E%20%3C%2Fg%3E%20%3Cpath%20d%3D%27M134%20320%20L172%20286%20L198%20308%20L216%20294%20L226%20320%20Z%27%20fill%3D%27%23C9A668%27%20opacity%3D%270.30%27%2F%3E%20%3Ctext%20x%3D%27180%27%20y%3D%27384%27%20fill%3D%27%2393897A%27%20font-family%3D%27Inter%2CArial%2Csans-serif%27%20font-size%3D%2715%27%20letter-spacing%3D%273%27%20text-anchor%3D%27middle%27%3EVIDEO%20YAKINDA%3C%2Ftext%3E%20%3C%2Fsvg%3E" muted loop playsinline style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></video>
         <div class="video-overlay"></div>
         <div class="video-tag">Tanıtım</div>
         <div class="play-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div>
         <div class="video-label"><small>Mağazamızdan</small>Showroom Turu</div>
       </div>
       <div class="hero-video-card" role="button" tabindex="0" aria-label="Jakuzi ve banyo sistemleri videosu" data-video="assets/hakanyapi-jakuzi.mp4" data-title="Jakuzi &amp; Banyo" data-subtitle="Ürünlerimizden">
-        <video src="" muted loop playsinline style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></video>
+        <video poster="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27360%27%20height%3D%27640%27%3E%20%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%270%27%20y2%3D%271%27%3E%20%3Cstop%20offset%3D%270%27%20stop-color%3D%27%231a1715%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%230d0c0b%27%2F%3E%20%3C%2FlinearGradient%3E%3C%2Fdefs%3E%20%3Crect%20width%3D%27360%27%20height%3D%27640%27%20fill%3D%27url%28%23g%29%27%2F%3E%20%3Cg%20fill%3D%27none%27%20stroke%3D%27%23C9A668%27%20stroke-width%3D%273%27%20opacity%3D%270.30%27%3E%20%3Crect%20x%3D%27128%27%20y%3D%27244%27%20width%3D%27104%27%20height%3D%2784%27%20rx%3D%2712%27%2F%3E%20%3Ccircle%20cx%3D%27154%27%20cy%3D%27274%27%20r%3D%2711%27%2F%3E%20%3C%2Fg%3E%20%3Cpath%20d%3D%27M134%20320%20L172%20286%20L198%20308%20L216%20294%20L226%20320%20Z%27%20fill%3D%27%23C9A668%27%20opacity%3D%270.30%27%2F%3E%20%3Ctext%20x%3D%27180%27%20y%3D%27384%27%20fill%3D%27%2393897A%27%20font-family%3D%27Inter%2CArial%2Csans-serif%27%20font-size%3D%2715%27%20letter-spacing%3D%273%27%20text-anchor%3D%27middle%27%3EVIDEO%20YAKINDA%3C%2Ftext%3E%20%3C%2Fsvg%3E" muted loop playsinline style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></video>
         <!-- Video kaynağı buraya: <video src="..." poster="..." autoplay muted loop playsinline></video> -->
         <div class="video-overlay"></div>
         <div class="video-tag">Yeni</div>
@@ -1258,12 +1260,14 @@ document.addEventListener('DOMContentLoaded', function(){
     toggle.classList.add('is-active');
     menu.classList.add('is-open');
     backdrop.classList.add('is-open');
+    document.body.classList.add('menu-open');
     document.body.style.overflow = 'hidden';
   }
   function closeMenu(){
     toggle.classList.remove('is-active');
     menu.classList.remove('is-open');
     backdrop.classList.remove('is-open');
+    document.body.classList.remove('menu-open');
     document.body.style.overflow = '';
   }
   toggle.addEventListener('click', function(){
