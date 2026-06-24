@@ -956,10 +956,87 @@
     .back-to-top{ left:14px; bottom:14px; width:44px; height:44px; }
   }
 
+  /* ===== CATEGORY DETAIL MODAL ===== */
+  .cat-card[role="button"]{ cursor:pointer; }
+  .cat-hint{
+    margin-top:16px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--gold-soft); display:inline-flex; align-items:center; gap:6px;
+    transition:color .3s ease, gap .3s ease;
+  }
+  .cat-hint span{ transition:transform .3s ease; }
+  .cat-card:hover .cat-hint{ color:var(--gold-bright); gap:10px; }
+  .cat-card:hover .cat-hint span{ transform:translateX(3px); }
+
+  .cat-modal{
+    position:fixed; inset:0; z-index:210;
+    background:rgba(11,10,9,0.96); backdrop-filter:blur(20px);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    opacity:0; visibility:hidden;
+    transition:opacity .4s ease, visibility 0s .4s linear;
+  }
+  .cat-modal.is-open{ opacity:1; visibility:visible; transition:opacity .4s ease, visibility 0s 0s linear; }
+  .cat-modal-panel{
+    position:relative;
+    width:100%; max-width:580px; max-height:88vh; overflow-y:auto;
+    background:#131210;
+    border:1px solid var(--gold-soft); border-radius:20px;
+    padding:48px 44px 44px;
+    box-shadow:0 40px 100px rgba(0,0,0,0.7), 0 0 60px rgba(201,166,104,0.10);
+    transform:scale(0.92) translateY(16px);
+    transition:transform .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .cat-modal.is-open .cat-modal-panel{ transform:scale(1) translateY(0); }
+  .cat-modal-close{
+    position:absolute; top:18px; right:18px;
+    width:42px; height:42px; border-radius:50%;
+    background:rgba(26,23,21,0.85); border:1px solid var(--gold-soft);
+    color:var(--cream); font-size:22px; font-weight:300; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:0;
+    transition:all .35s ease; z-index:1;
+  }
+  .cat-modal-close:hover{ background:var(--gold); color:var(--bg); border-color:var(--gold); transform:rotate(90deg); }
+  .cat-modal-icon{
+    width:64px; height:64px; border-radius:50%;
+    border:1px solid var(--gold-soft); background:rgba(201,166,104,0.06);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--gold); margin-bottom:24px;
+  }
+  .cat-modal-icon svg{ width:30px; height:30px; }
+  .cat-modal-title{
+    font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:600;
+    color:var(--cream); line-height:1.15; margin-bottom:18px;
+  }
+  .cat-modal-desc{
+    color:var(--muted); font-size:15px; line-height:1.9; font-weight:300; margin-bottom:26px;
+  }
+  .cat-modal-brands{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:32px; }
+  .cat-modal-brand{
+    display:inline-flex; align-items:center;
+    padding:8px 16px; border-radius:30px;
+    border:1px solid var(--gold-soft); background:rgba(201,166,104,0.05);
+    color:var(--gold-bright);
+    font-size:12px; letter-spacing:0.05em; text-transform:uppercase;
+  }
+  .cat-modal-cta{ display:inline-block; }
+  @media (max-width:600px){
+    .cat-modal{ padding:0; }
+    .cat-modal-panel{
+      max-width:none; width:100%; height:100%; max-height:100dvh;
+      border:none; border-radius:0; padding:78px 24px 40px;
+    }
+    .cat-modal-close{ top:14px; right:14px; }
+    .cat-modal-title{ font-size:26px; }
+    .cat-modal-icon{ width:56px; height:56px; }
+  }
+
   /* ===== REDUCED MOTION — disable premium motion for sensitive users ===== */
   @media (prefers-reduced-motion: reduce){
     .hero-inner h1 .word, .hero-fade{ opacity:1 !important; transform:none !important; filter:none !important; transition:none !important; }
     .btn-primary::after{ animation:none !important; display:none !important; }
+    .cat-modal-panel{ transition:none !important; transform:none !important; }
+    .cat-modal-close:hover{ transform:none !important; }
+    .cat-hint, .cat-hint span{ transition:none !important; }
     .show-tile, .show-tile:hover{ transform:none !important; }
     .show-tile img, .show-tile:hover img{ transition:none !important; }
     .back-to-top{ transition:opacity .2s ease, visibility .2s ease !important; transform:none !important; }
@@ -1275,6 +1352,18 @@
 <div class="lightbox-overlay" id="lightboxOverlay">
   <div class="lightbox-close" id="lightboxClose">&times;</div>
   <img src="" id="lightboxImg" alt="Showroom görseli">
+</div>
+
+<!-- CATEGORY DETAIL MODAL -->
+<div class="cat-modal" id="catModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="catModalTitle">
+  <div class="cat-modal-panel" role="document">
+    <button class="cat-modal-close" id="catModalClose" type="button" aria-label="Kapat">&times;</button>
+    <div class="cat-modal-icon" id="catModalIcon" aria-hidden="true"></div>
+    <h3 class="cat-modal-title" id="catModalTitle"></h3>
+    <p class="cat-modal-desc" id="catModalDesc"></p>
+    <div class="cat-modal-brands" id="catModalBrands"></div>
+    <a class="btn-primary cat-modal-cta" id="catModalCta" href="https://wa.me/905373870994" target="_blank" rel="noopener">Showroom'da İnceleyin</a>
+  </div>
 </div>
 
 <footer>
@@ -1648,6 +1737,88 @@ document.addEventListener('DOMContentLoaded', function(){
       document.addEventListener('mouseleave', function(){ glow.classList.remove('is-active'); });
     }
   }
+})();
+
+(function(){
+  // ===== CATEGORY DETAIL MODAL =====
+  var modal = document.getElementById('catModal');
+  if (!modal) return;
+  var panel = modal.querySelector('.cat-modal-panel');
+  var iconEl = document.getElementById('catModalIcon');
+  var titleEl = document.getElementById('catModalTitle');
+  var descEl = document.getElementById('catModalDesc');
+  var brandsEl = document.getElementById('catModalBrands');
+  var closeBtn = document.getElementById('catModalClose');
+
+  // content per category (same order as the cards in #kategoriler)
+  var data = [
+    { desc:"Zemin ve duvar kaplamalarında mermer dokulu, mat, parlak ve rektifiye seçenekler sunuyoruz. Yüzlerce model ve renk alternatifiyle her mekana özel çözümler bulabilirsiniz. İç mekan salonlarından dış cephelere, mutfak tezgahlarından banyo duvarlarına kadar geniş bir yelpazede ürünlerimiz mevcuttur. Showroom'umuzda zemin ve duvar seramiklerini gerçek boyutlarıyla yerleştirdiğimiz uygulama alanlarında canlı olarak görebilir, farklı kombinasyonları yan yana inceleyebilirsiniz.",
+      brands:["NG Kütahya Seramik","QUA"] },
+    { desc:"Lavabo, duş ve küvet bataryalarında krom, mat siyah ve altın kaplama gibi farklı finish seçenekleri sunuyoruz. Ergonomik tasarımlar ve uzun ömürlü malzemelerle hem estetik hem dayanıklılık bir arada. Tek kollu, çift kollu ve termostatik modeller showroom'umuzda sergilenmektedir. Showroom'umuzda kurulu çalışan batarya ve armatür istasyonlarımızda ürünleri bizzat deneyebilir, su akışını ve kullanım konforunu yerinde test edebilirsiniz.",
+      brands:["Artema","Belinza","Fleko"] },
+    { desc:"Asma klozet, yerden bağlantılı ve gömme rezervuarlı sistemlerde modern ve fonksiyonel seçenekler sunuyoruz. Sessiz kapak mekanizması, çift kademe sifon teknolojisi ve antibakteriyel yüzey kaplamaları standart özelliklerimiz arasındadır. Showroom'umuzda farklı tuvalet set konfigürasyonları kurulu halde sergilenmekte olup ürünlerin boyutlarını, oturma yüksekliğini ve mekanizma kalitesini yerinde inceleyebilirsiniz.",
+      brands:["Belinza","Valtemo"] },
+    { desc:"Dijital kontrol panelli, çoklu duş başlıklı ve termostatik sistemlerde konfor ve teknolojiyi bir araya getiriyoruz. Sıcaklık hafızası, su tasarrufu modu ve kişiselleştirilebilir duş programları ile banyonuzu geleceğe taşıyın. Yağmurlama, masaj ve el duşu kombinasyonları mevcuttur. Showroom'umuzda akıllı duş sistemlerini aktif olarak görebilir, su basıncı ve yönlendirme seçeneklerini canlı şekilde deneyimleyebilirsiniz.",
+      brands:["Newarc","Fleko"] },
+    { desc:"Granit ve paslanmaz çelik seçeneklerde, dokunmatik sensörlü armatür uyumlu modeller sunuyoruz. Gürültü önleyici kaplama, sızdırmazlık sistemi ve geniş tekne boyutlarıyla mutfak konforunuzu artırın. Tek ve çift hazneli, farklı montaj tiplerine uygun modeller mevcuttur. Showroom'umuzda mutfak tezgahı üzerine entegre kurulu evye istasyonlarımızda ürünleri bizzat görebilir, boyut ve derinlik seçeneklerini yerinde karşılaştırabilirsiniz.",
+      brands:["Belinza","Artema"] },
+    { desc:"Mutfak ve banyo bataryalarında koleksiyon bütünlüğünü tamamlayan havluluk, sabunluk, tuvalet kağıtlığı ve ayna gibi aksesuar setleri sunuyoruz. Aynı seriden ürünlerle mekanınıza tutarlı ve şık bir görünüm kazandırabilirsiniz. Showroom'umuzda komple aksesuar setleri kurulu halde sergilenmekte, renk ve finish uyumunu diğer ürünlerle birlikte yerinde değerlendirebilirsiniz.",
+      brands:["Artema","Fleko","Valtemo"] }
+  ];
+
+  var lastFocused = null;
+  function openModal(card, idx){
+    var d = data[idx];
+    if (!d) return;
+    var cardIcon = card.querySelector('.cat-icon');
+    iconEl.innerHTML = cardIcon ? cardIcon.innerHTML : '';
+    var h3 = card.querySelector('h3');
+    titleEl.textContent = h3 ? h3.textContent.trim() : '';
+    descEl.textContent = d.desc;
+    brandsEl.innerHTML = '';
+    d.brands.forEach(function(b){
+      var span = document.createElement('span');
+      span.className = 'cat-modal-brand';
+      span.textContent = b;
+      brandsEl.appendChild(span);
+    });
+    lastFocused = document.activeElement;
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (panel) panel.scrollTop = 0;
+    closeBtn.focus();
+  }
+  function closeModal(){
+    if (!modal.classList.contains('is-open')) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  document.querySelectorAll('#kategoriler .cat-card').forEach(function(card, idx){
+    if (idx >= data.length) return;
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-haspopup', 'dialog');
+    if (!card.querySelector('.cat-hint')) {
+      var hint = document.createElement('div');
+      hint.className = 'cat-hint';
+      hint.innerHTML = 'Detayları Gör <span aria-hidden="true">→</span>';
+      card.appendChild(hint);
+    }
+    card.addEventListener('click', function(){ openModal(card, idx); });
+    card.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(card, idx); }
+    });
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeModal();
+  });
 })();
 
 window.toggleFaq = function(el){
